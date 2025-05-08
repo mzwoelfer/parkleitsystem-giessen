@@ -26,6 +26,12 @@ jobs:
       - name: Build app
         run: npm run build
 
+      - name: List build output
+        run: ls -l dist
+
+      - name: List WEBPAGE build output
+        run: ls -l WEBPAGE/dist
+
       - name: Add 404.html fallback
         run: cp dist/index.html dist/404.html
 
