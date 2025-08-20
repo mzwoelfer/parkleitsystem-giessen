@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+import HomeView from '@/views/HomeView.vue'
 </script>
 
 <template>
@@ -18,7 +18,7 @@ import { RouterLink, RouterView } from "vue-router";
 
     <!-- CONTENT -->
     <main class="min-h-screen w-full flex mx-auto justify-center max-w-lg md:max-w-3xl lg:max-w-5xl p-4">
-      <RouterView />
+      <HomeView />
     </main>
 
     <!-- FOOTER -->
