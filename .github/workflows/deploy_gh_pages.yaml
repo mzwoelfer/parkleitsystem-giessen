@@ -14,10 +14,10 @@ jobs:
         working-directory: WEBPAGE/
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout REpo
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup NOde
         uses: actions/setup-node@v4
 
       - name: Install dependencies
