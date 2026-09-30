@@ -1,62 +1,75 @@
-# Auslesen Parkleitsystem Gießen
-Data sourced from the webpage of the parking guidance system (`Parkleitsystem`) by the city **Gießen**.
+# Gießen Parking Data
 
-🔗 URL: https://www.giessen.de/Umwelt_und_Verkehr/Parken/
+This project collects parking availability reported by the City of Gießen and turns repeated snapshots into historical occupancy data. A small Vue dashboard charts a selected car park's history by week and offers CSV downloads.
 
-<div align="center">
-  <img src="https://www.giessen.de/layout/giessen2017/assets/img/giessen-logo.png" alt="Universitätsstadt Gießen Logo" width="150"/>
-</div>
+## What it is useful for
 
+- Check reported free spaces before driving to a participating car park.
+- Compare car-park utilization and identify busy periods from saved snapshots.
+- Explore or export occupancy history for personal analysis, coursework, or research.
 
-## 🚀 Usage
-The `scraping_parkleitsstem.py` script reads the HTML table on the parkhouse webpage and prints it as JSON to the console.
-```SHELL
-python3 scraping_parkleitsstem.py
-```
+This is an analysis and information project, not a navigation or reservation service. Its data only covers car parks shown by the city's parking guidance page.
 
-## 🏗️ How to use / Development?
+## How it works
 
-```BASH
-# Create / Activate Python Virtual Environment
-python3 -m venv Env
-source Env/bin/activate
+1. `scraping_parkleitsystem.py` reads the city's parking page and prints a JSON snapshot containing the update time and each listed car park's free, occupied, and total spaces.
+2. Save snapshots in `data/` to build an archive. The scraper prints to the console; it does not schedule or save snapshots automatically.
+3. `parkhouse_aggregator/parkhouse_aggregator.py` groups archived snapshots by car park, sorts entries by time, and writes one JSON history per car park into `parkhouse_data/`.
+4. `WEBPAGE/` contains a Vue dashboard with bundled historical datasets and weekly occupancy charts. Refresh its bundled data when updating the archive. A CSV download button is present, but its handler is not implemented yet.
 
-# Install dependencies
-pip install -r requirements.txt
+Each scraped snapshot has this shape:
 
-# Get last updated data in JSON format
-python3 scraping_parkleitsystem.py
-```
-
-## The data format
-```JSON
+```json
 {
   "timestamp": "ddmmyyyy-hhmm",
   "parkhouses": [
     {
       "name": "NAME",
-      "free_spaces": INT,
-      "occupied_spaces": INT,
-      "max_spaces": INT
-    },
-    {
-        ...
+      "free_spaces": 120,
+      "occupied_spaces": 79,
+      "max_spaces": 199
     }
   ]
 }
 ```
 
+## Run
 
-## What and Where?
-- `data/`: JSON dumps form the parkhouse data approx. every 5 minutes
-- `tests/`: Tests
-- `parkhouse_aggregator/`: Python3 script that aggregate the raw data from `data/` per parkhouse
-    - `parkhouse_aggregator.py`: Aggregates the raw data from the `data/` directory per parkhouse into the `parkhouse_data/` directory
-- `parkhouse_data/`: Parkhouse occupation aggregated over time, per parkhouse
+Install Python dependencies and scrape the current page:
 
-## 🚧 Limitations
-- The data excludes nights: The data is only updated between 9am and 9pm. Nightly changes are not included
-- Some large parkhouses in Gießen are not present in the dataset
-- Parkhouses that are closed will sometimes not be updated on the webpage (Parkhaus "Am Kino")
+```bash
+python3 -m venv Env
+source Env/bin/activate
+pip install -r requirements.txt
+python scraping_parkleitsystem.py
+```
 
+To aggregate snapshots already saved in `data/`:
 
+```bash
+python -m parkhouse_aggregator.parkhouse_aggregator
+```
+
+To run the dashboard locally:
+
+```bash
+cd WEBPAGE
+npm install
+npm run dev
+```
+
+## Tests
+
+Run the offline Python unit tests:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Each test checks one behavior with one assertion. Tests use fixed HTML and sample snapshots; they do not depend on the city's website being reachable.
+
+## Limitations
+
+- Source data usually updates only between 09:00 and 21:00, so overnight changes are not captured.
+- The city page omits some Gießen car parks; a closed car park may also retain stale availability.
+- Historical analysis is only as complete as the snapshots collected and saved in `data/`.
