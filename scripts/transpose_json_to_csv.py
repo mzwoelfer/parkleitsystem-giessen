@@ -2,13 +2,7 @@ import json
 import csv
 import argparse
 import os
-from datetime import datetime
-
-
-def epoch_to_hhmm(epoch_time):
-    dt = datetime.utcfromtimestamp(epoch_time)
-    return dt.isoformat()
-
+from parkhouse_aggregator.logic import epoch_to_hhmm
 
 def transpose_json_to_csv(json_path):
     with open(json_path, "r") as json_file:

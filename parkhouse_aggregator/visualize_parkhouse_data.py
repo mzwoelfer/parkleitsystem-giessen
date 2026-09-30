@@ -6,6 +6,8 @@ import os
 import argparse
 from datetime import datetime
 
+from parkhouse_aggregator.logic import epoch_to_human, flatten_parkhouse_data
+
 
 def load_json_from_file(file_path):
     """
@@ -22,23 +24,9 @@ def load_json_from_file(file_path):
     return data
 
 
-def epoch_to_human(timestamp):
-    return datetime.fromtimestamp(timestamp).strftime("%a. %d.%m - %H:%M")
-
-
 def flatten_data(file_path):
     data = load_json_from_file(file_path)
-
-    flat_data = [
-        {
-            "timestamp": epoch_to_human(entry["timestamp"]),
-            "value": entry["occupied_spaces"],
-        }
-        for entry in data["occupation_data"]
-    ]
-
-    df = pd.DataFrame(flat_data)
-    return df
+    return flatten_parkhouse_data(data)
 
 
 def plot_data(df, name):

@@ -1,6 +1,9 @@
 import unittest
 
-import scraping_parkleitsystem
+from scraping_parkleitsystem_logic import (
+    get_text_from_html_tag,
+    scrape_webpage,
+)
 
 
 PARKING_PAGE_HTML = """
@@ -15,12 +18,10 @@ PARKING_PAGE_HTML = """
 """
 
 
-class ParkingSnapshotTests(unittest.TestCase):
+class ParkingPageLogicTests(unittest.TestCase):
     def test_scrape_returns_timestamped_parking_snapshot(self):
-        snapshot = scraping_parkleitsystem.scrape_webpage(PARKING_PAGE_HTML)
-
         self.assertEqual(
-            snapshot,
+            scrape_webpage(PARKING_PAGE_HTML),
             {
                 "timestamp": "01012024-0915",
                 "parkhouses": [
@@ -34,22 +35,21 @@ class ParkingSnapshotTests(unittest.TestCase):
             },
         )
 
-    def test_occupied_spaces_are_capacity_minus_free_spaces(self):
-        parkhouse = scraping_parkleitsystem.extract_parkhouse_data_from_html_tag(
-            """
-            <div class="info-panel">
-                <span class="slot-name">Dern-Passage</span>
-                <span class="free">Frei: 120</span>
-                <span class="max">Gesamt: 199</span>
-            </div>
-            """
+    def test_requested_html_element_returns_its_markup(self):
+        result = get_text_from_html_tag(
+            '<div class="status">Open</div>',
+            {
+                "html_element": "div",
+                "html_attribute": "class",
+                "attribute_value": "status",
+            },
         )
 
-        self.assertEqual(parkhouse["occupied_spaces"], 79)
+        self.assertEqual(result, '<div class="status">Open</div>')
 
     def test_missing_requested_html_element_raises_a_clear_error(self):
         with self.assertRaisesRegex(TypeError, "No div element with class 'missing' found"):
-            scraping_parkleitsystem.get_text_from_html_tag(
+            get_text_from_html_tag(
                 PARKING_PAGE_HTML,
                 {
                     "html_element": "div",
@@ -57,7 +57,3 @@ class ParkingSnapshotTests(unittest.TestCase):
                     "attribute_value": "missing",
                 },
             )
-
-
-if __name__ == "__main__":
-    unittest.main()
