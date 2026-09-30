@@ -3,6 +3,7 @@ import json
 import logging
 
 from parkhouse_aggregator.history import (
+    PARKHOUSE_NAME_ALIASES,
     convert_timestamp_to_epoch_seconds,
     generate_parkhouse_data,
 )
@@ -45,6 +46,14 @@ def export_parkhouse_data(data_directory, parkhouses_data):
         export_path = os.path.join(data_directory, export_filename)
         with open(export_path, mode="w") as export_file:
             json.dump(parkhouses_data[parkhouse], export_file)
+
+        if parkhouse == "Neustädter":
+            for alias in PARKHOUSE_NAME_ALIASES:
+                alias_filename = f"{alias}.json"
+                if alias_filename != export_filename:
+                    alias_path = os.path.join(data_directory, alias_filename)
+                    if os.path.isfile(alias_path):
+                        os.remove(alias_path)
     return
 
 

@@ -1,5 +1,19 @@
 from datetime import datetime
+import unicodedata
 from zoneinfo import ZoneInfo
+
+
+PARKHOUSE_NAME_ALIASES = {
+    "neustã€dter": "Neustädter",
+    "neustã€dter tor": "Neustädter",
+    "neustädter": "Neustädter",
+    "neustädter tor": "Neustädter",
+}
+
+
+def canonicalize_parkhouse_name(name):
+    normalized_name = unicodedata.normalize("NFC", name.strip())
+    return PARKHOUSE_NAME_ALIASES.get(normalized_name.casefold(), normalized_name)
 
 
 def convert_timestamp_to_epoch_seconds(timestamp):
@@ -14,7 +28,7 @@ def generate_parkhouse_data(aggregated_data_list):
         timestamp = raw_data.get("timestamp", "")
 
         for parkhouse_info in raw_data.get("parkhouses", []):
-            parkhouse_name = parkhouse_info.get("name").strip()
+            parkhouse_name = canonicalize_parkhouse_name(parkhouse_info.get("name"))
 
             if parkhouse_name not in parkhouses_data:
                 parkhouses_data[parkhouse_name] = {

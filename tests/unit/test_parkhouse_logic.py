@@ -62,3 +62,49 @@ class ParkingHistoryTests(unittest.TestCase):
                 },
             ],
         )
+
+    def test_known_neustaedter_names_share_one_canonical_history(self):
+        snapshots = [
+            {
+                "timestamp": "09112023-0910",
+                "parkhouses": [
+                    {
+                        "name": " NeustÃ€dter Tor",
+                        "free_spaces": 100,
+                        "occupied_spaces": 99,
+                        "max_spaces": 199,
+                    }
+                ],
+            },
+            {
+                "timestamp": "09112023-0905",
+                "parkhouses": [
+                    {
+                        "name": "neustädter",
+                        "free_spaces": 120,
+                        "occupied_spaces": 79,
+                        "max_spaces": 199,
+                    }
+                ],
+            },
+        ]
+
+        history = generate_parkhouse_data(snapshots)
+
+        self.assertEqual(
+            history["Neustädter"]["occupation_data"],
+            [
+                {
+                    "timestamp": 1699517100,
+                    "free_spaces": 120,
+                    "occupied_spaces": 79,
+                    "max_spaces": 199,
+                },
+                {
+                    "timestamp": 1699517400,
+                    "free_spaces": 100,
+                    "occupied_spaces": 99,
+                    "max_spaces": 199,
+                },
+            ],
+        )
