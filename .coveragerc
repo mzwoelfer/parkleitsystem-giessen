@@ -1,4 +1,7 @@
 [run]
 source =
-    parkhouse_aggregator.logic
+    parkhouse_aggregator.history
+    parkhouse_aggregator.daily_summary
+    parkhouse_aggregator.visualization
+    parkhouse_aggregator.csv_export
     scraping_parkleitsystem_logic

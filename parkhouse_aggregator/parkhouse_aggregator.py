@@ -2,7 +2,7 @@ import os
 import json
 import logging
 
-from parkhouse_aggregator.logic import (
+from parkhouse_aggregator.history import (
     convert_timestamp_to_epoch_seconds,
     generate_parkhouse_data,
 )

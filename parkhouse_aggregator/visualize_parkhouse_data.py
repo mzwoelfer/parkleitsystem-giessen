@@ -1,12 +1,10 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
-import pandas as pd
 import json
 import os
 import argparse
-from datetime import datetime
 
-from parkhouse_aggregator.logic import epoch_to_human, flatten_parkhouse_data
+from parkhouse_aggregator.visualization import epoch_to_human, flatten_parkhouse_data
 
 
 def load_json_from_file(file_path):

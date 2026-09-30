@@ -3,12 +3,9 @@ from datetime import datetime
 
 import pandas as pd
 
-from parkhouse_aggregator.logic import (
-    epoch_to_hhmm,
-    epoch_to_human,
-    flatten_parkhouse_data,
-    process_parkhouse_data,
-)
+from parkhouse_aggregator.csv_export import epoch_to_hhmm
+from parkhouse_aggregator.daily_summary import process_parkhouse_data
+from parkhouse_aggregator.visualization import epoch_to_human, flatten_parkhouse_data
 
 
 class InMemoryTransformTests(unittest.TestCase):

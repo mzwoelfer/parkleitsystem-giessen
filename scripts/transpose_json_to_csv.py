@@ -2,7 +2,7 @@ import json
 import csv
 import argparse
 import os
-from parkhouse_aggregator.logic import epoch_to_hhmm
+from parkhouse_aggregator.csv_export import epoch_to_hhmm
 
 def transpose_json_to_csv(json_path):
     with open(json_path, "r") as json_file:

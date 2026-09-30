@@ -1,7 +1,7 @@
 import os
 import json
 
-from parkhouse_aggregator.logic import process_parkhouse_data as process_json_file
+from parkhouse_aggregator.daily_summary import process_parkhouse_data as process_json_file
 
 
 def read_json_file(file_path):
