@@ -32,10 +32,13 @@ Dashboard plots bundled weekly occupancy history. Its CSV button currently has n
 ## Tests
 
 ```bash
-python -m unittest discover -s tests -v
+python -m unittest discover -s tests/unit -v
+python -m coverage run -m unittest discover -s tests/unit -v
+python -m coverage report --show-missing --fail-under=100
+python -m unittest discover -s tests/integration -v
 ```
 
-Offline tests use fixture HTML and sample snapshots; each test has one assertion.
+Unit tests cover pure parsing and transformation logic. Integration tests use real temporary JSON files to verify the snapshot-to-history flow; neither suite uses mocks or contacts the live site.
 
 ## Contribute
 
